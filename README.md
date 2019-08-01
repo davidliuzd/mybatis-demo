@@ -8,3 +8,4 @@
 ```
 使用mybatis版本为3.5.1，与申城异乡人的演示情况有细微差别，影响不大！
 ```
+#### [MyBatis3文档](http://www.mybatis.org/mybatis-3/zh/index.html)
