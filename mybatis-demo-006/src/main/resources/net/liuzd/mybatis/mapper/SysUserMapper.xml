@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.liuzd.mybatis.mapper.SysUserMapper">
+
+	<resultMap id="BaseResultMap"
+		type="net.liuzd.mybatis.model.SysUser">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="user_name" jdbcType="VARCHAR"
+			property="userName" />
+		<result column="user_password" jdbcType="VARCHAR"
+			property="userPassword" />
+		<result column="user_email" jdbcType="VARCHAR"
+			property="userEmail" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="user_info" jdbcType="LONGVARCHAR"
+			property="userInfo" />
+		<result column="head_img" jdbcType="LONGVARBINARY"
+			property="headImg" />
+	</resultMap>
+	
+	<select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">   
+	    select id, user_name, user_password, user_email, create_time, user_info, head_img
+	    from sys_user
+	    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+	<select id="selectByUser"
+		resultType="net.liuzd.mybatis.model.SysUser">
+		SELECT id,
+		user_name,
+		user_password,
+		user_email,
+		create_time
+		FROM sys_user
+		WHERE 1 = 1
+		<if test="userName != null and userName != ''">
+			<bind name="userNameLike" value="'%' + userName + '%'"/>
+	    	and user_name like #{userNameLike}
+	    	<!-- mysql函数 -->
+			<!-- AND user_name LIKE CONCAT('%',#{userName},'%') -->
+		</if>
+		<if test="userEmail != null and userEmail != ''">
+			AND user_email = #{userEmail}
+		</if>
+	</select>
+
+	<update id="updateByIdSelective">
+		UPDATE sys_user
+		SET
+		<if test="userName != null and userName != ''">
+			user_name = #{userName},
+		</if>
+		<if test="userPassword != null and userPassword != ''">
+			user_password = #{userPassword},
+		</if>
+		<if test="userEmail != null and userEmail != ''">
+			user_email = #{userEmail},
+		</if>
+		<if test="userInfo != null and userInfo != ''">
+			user_info = #{userInfo},
+		</if>
+		<if test="headImg != null">
+			head_img = #{headImg,jdbcType=BLOB},
+		</if>
+		<if test="createTime != null">
+			create_time = #{createTime,jdbcType=TIMESTAMP},
+		</if>
+		id = #{id}
+		WHERE id = #{id}
+	</update>
+	
+	<insert id="insertSelective" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO sys_user(user_name, user_password,
+	    <if test="userEmail != null and userEmail != ''">
+	        user_email,
+	    </if>
+	    user_info, head_img, create_time)
+	    VALUES (#{userName},#{userPassword},
+	    <if test="userEmail != null and userEmail != ''">
+	        #{userEmail},
+	    </if>
+	    #{userInfo},#{headImg,jdbcType=BLOB},#{createTime,jdbcType=TIMESTAMP})
+</insert>
+
+</mapper>

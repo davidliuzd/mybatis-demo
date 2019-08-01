@@ -1,0 +1,96 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.liuzd.mybatis</groupId>
+	<artifactId>mybatis-demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>mybatis-demo-001</module>
+		<module>mybatis-demo-002</module>
+		<module>mybatis-demo-003</module>
+		<module>mybatis-demo-004</module>
+		<module>mybatis-demo-005</module>
+		<module>mybatis-demo-006</module>
+		<module>mybatis-demo-007</module>
+		<module>mybatis-demo-008</module>
+		<module>mybatis-demo-009</module>
+		<module>mybatis-demo-010</module>
+		<module>mybatis-demo-011</module>
+		<module>mybatis-demo-012</module>
+		<module>mybatis-demo-013</module>
+		<module>mybatis-demo-014</module>
+	</modules>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<mybatis.version>3.5.1</mybatis.version>
+		<mysql-connector-java.version>8.0.16</mysql-connector-java.version>
+		<junit.version>4.12</junit.version>
+		<slf4j-api.version>1.7.12</slf4j-api.version>
+		<slf4j-log4j12.version>1.7.12</slf4j-log4j12.version>
+		<log4j.version>1.2.17</log4j.version>
+		<mybatis-generator-core.version>1.3.3</mybatis-generator-core.version>
+		<commons-lang3.version>3.9</commons-lang3.version>
+	</properties>
+
+	<dependencyManagement>
+
+		<dependencies>
+
+			<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis</artifactId>
+				<version>${mybatis.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql-connector-java.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j-log4j12.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mybatis.generator</groupId>
+				<artifactId>mybatis-generator-core</artifactId>
+				<version>${mybatis-generator-core.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3.version}</version>
+			</dependency>
+
+
+		</dependencies>
+
+	</dependencyManagement>	
+
+	<name>MyBatis Demo</name>
+	<description>文档：http://www.mybatis.org/mybatis-3/zh/index.html</description>
+</project>

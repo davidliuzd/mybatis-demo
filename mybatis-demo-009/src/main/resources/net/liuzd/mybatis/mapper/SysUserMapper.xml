@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.liuzd.mybatis.mapper.SysUserMapper">
+
+	<resultMap id="sysUserMap"		type="net.liuzd.mybatis.model.SysUser">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="user_name" jdbcType="VARCHAR"
+			property="userName" />
+		<result column="user_password" jdbcType="VARCHAR"
+			property="userPassword" />
+		<result column="user_email" jdbcType="VARCHAR"
+			property="userEmail" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="user_info" jdbcType="LONGVARCHAR"
+			property="userInfo" />
+		<result column="head_img" jdbcType="LONGVARBINARY"
+			property="headImg" />
+	</resultMap>
+	
+	<resultMap id="userRoleMap" type="net.liuzd.mybatis.model.SysUserExtend">
+        <id property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userPassword" column="user_password"/>
+        <result property="userEmail" column="user_email"/>
+        <result property="userInfo" column="user_info"/>
+        <result property="headImg" column="head_img" jdbcType="BLOB"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <!--role相关属性-->
+        <result property="sysRole.id" column="role_id"/>
+        <result property="sysRole.roleName" column="role_role_name"/>
+        <result property="sysRole.enabled" column="role_enabled"/>
+        <result property="sysRole.createBy" column="role_create_by"/>
+        <result property="sysRole.createTime" column="role_create_time" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<resultMap id="extendUserRoleMap" type="net.liuzd.mybatis.model.SysUserExtend" extends="sysUserMap">
+	    <!--role相关属性-->
+	    <result property="sysRole.id" column="role_id"/>
+	    <result property="sysRole.roleName" column="role_role_name"/>
+	    <result property="sysRole.enabled" column="role_enabled"/>
+	    <result property="sysRole.createBy" column="role_create_by"/>
+	    <result property="sysRole.createTime" column="role_create_time" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<resultMap id="associationUserRoleMap" type="net.liuzd.mybatis.model.SysUserExtend" extends="sysUserMap">
+	    <association property="sysRole" columnPrefix="role_" javaType="net.liuzd.mybatis.model.SysRole">
+	        <result property="id" column="id"/>
+	        <result property="roleName" column="role_name"/>
+	        <result property="enabled" column="enabled"/>
+	        <result property="createBy" column="create_by"/>
+	        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+	    </association>
+	</resultMap>
+	
+	<resultMap id="associationUserRoleMapOfReference" type="net.liuzd.mybatis.model.SysUserExtend" extends="sysUserMap">
+	    <association property="sysRole" columnPrefix="role_"
+             resultMap="net.liuzd.mybatis.mapper.SysRoleMapper.roleMap"/>
+	</resultMap>
+	
+	
+	<select id="selectById" parameterType="java.lang.Long" resultMap="sysUserMap">   
+	    select id, user_name, user_password, user_email, create_time, user_info, head_img
+	    from sys_user
+	    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectUserAndRoleById" resultType="net.liuzd.mybatis.model.SysUserExtend">
+    SELECT u.id,
+           u.user_name userName,
+           u.user_password userPassword,
+           u.user_email userEmail,
+           u.create_time createTime,
+           r.id "sysRole.id",
+           r.role_name   "sysRole.roleName",
+           r.enabled "sysRole.enabled",
+           r.create_by   "sysRole.createBy",
+           r.create_time "sysRole.createTime"
+    FROM sys_user u
+    INNER JOIN sys_user_role ur ON u.id = ur.user_id
+    INNER JOIN sys_role r ON ur.role_id = r.id
+    WHERE u.id = #{id}
+</select>
+
+<select id="selectUserAndRoleByIdResultMap" resultMap="userRoleMap">
+    SELECT  u.id,
+            u.user_name,
+            u.user_password,
+            u.user_email,
+            u.create_time,
+            r.id role_id,
+            r.role_name role_role_name,
+            r.enabled role_enabled,
+            r.create_by role_create_by,
+            r.create_time role_create_time
+    FROM sys_user u
+    INNER JOIN sys_user_role ur ON u.id = ur.user_id
+    INNER JOIN sys_role r ON ur.role_id = r.id
+    WHERE u.id = #{id}
+</select>
+
+<select id="selectUserAndRoleByIdResultMapOfExtend" resultMap="extendUserRoleMap">
+    SELECT  u.id,
+            u.user_name,
+            u.user_password,
+            u.user_email,
+            u.create_time,
+            r.id role_id,
+            r.role_name role_role_name,
+            r.enabled role_enabled,
+            r.create_by role_create_by,
+            r.create_time role_create_time
+    FROM sys_user u
+    INNER JOIN sys_user_role ur ON u.id = ur.user_id
+    INNER JOIN sys_role r ON ur.role_id = r.id
+    WHERE u.id = #{id}
+</select>
+
+<select id="associationSelectUserAndRoleByIdResultMapOfExtend" resultMap="associationUserRoleMap">
+    SELECT  u.id,
+            u.user_name,
+            u.user_password,
+            u.user_email,
+            u.create_time,
+            r.id role_id,
+            r.role_name role_role_name,
+            r.enabled role_enabled,
+            r.create_by role_create_by,
+            r.create_time role_create_time
+    FROM sys_user u
+    INNER JOIN sys_user_role ur ON u.id = ur.user_id
+    INNER JOIN sys_role r ON ur.role_id = r.id
+    WHERE u.id = #{id}
+</select>
+
+
+
+<select id="associationSelectUserAndRoleByIdResultMapOfReference" resultMap="associationUserRoleMapOfReference">
+    SELECT  u.id,
+            u.user_name,
+            u.user_password,
+            u.user_email,
+            u.create_time,
+            r.id role_id,
+            r.role_name role_role_name,
+            r.enabled role_enabled,
+            r.create_by role_create_by,
+            r.create_time role_create_time
+    FROM sys_user u
+    INNER JOIN sys_user_role ur ON u.id = ur.user_id
+    INNER JOIN sys_role r ON ur.role_id = r.id
+    WHERE u.id = #{id}
+</select>	
+	
+
+</mapper>

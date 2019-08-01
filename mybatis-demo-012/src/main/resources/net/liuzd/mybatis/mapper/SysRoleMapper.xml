@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.liuzd.mybatis.mapper.SysRoleMapper">
+  
+  <resultMap id="roleMap" type="net.liuzd.mybatis.model.SysRole">
+    <id property="id" column="id"/>
+    <result property="roleName" column="role_name"/>
+    <result property="enabled" column="enabled"/>
+    <result property="createBy" column="create_by"/>
+    <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+</resultMap>
+
+<resultMap id="rolePrivilegeListMap" extends="roleMap"       type="net.liuzd.mybatis.model.SysRoleExtend">
+    <collection property="sysPrivilegeList" columnPrefix="privilege_"
+                resultMap="net.liuzd.mybatis.mapper.SysPrivilegeMapper.sysPrivilegeMap"/>
+</resultMap>
+
+<!-- 实现延迟加载需要使用collection标签的fetchType属性，该属性有lazy和eager两个值，分别代表延迟加载和积极加载 -->
+<!-- column="{roleId=id}"中，roleId指的是select指定的方法selectPrivilegeByRoleId的参数，id指的是查询selectRoleByUserId中查询出的角色id -->
+<resultMap id="rolePrivilegeListMapSelect" extends="roleMap"   type="net.liuzd.mybatis.model.SysRoleExtend">
+    <collection property="sysPrivilegeList" 
+    			fetchType="lazy"    			
+                column="{roleId=id}"
+                select="net.liuzd.mybatis.mapper.SysPrivilegeMapper.selectPrivilegeByRoleId"/>
+</resultMap>
+
+<select id="selectRoleById" resultMap="roleMap">
+    SELECT 
+      `id`,
+	  `role_name`,
+	  `enabled`,
+	  `create_by`,
+	  `create_time`
+    FROM sys_role WHERE id = #{id}
+</select>
+
+<select id="selectRoleByUserId" resultMap="rolePrivilegeListMapSelect">
+    SELECT
+          r.id,
+          r.role_name,
+          r.enabled,
+          r.create_by,
+          r.create_time
+    FROM sys_role r
+    INNER JOIN sys_user_role ur ON ur.role_id = r.id
+    WHERE ur.user_id = #{userId}
+</select>
+
+  
+</mapper>

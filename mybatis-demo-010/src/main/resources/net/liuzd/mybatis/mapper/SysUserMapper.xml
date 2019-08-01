@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.liuzd.mybatis.mapper.SysUserMapper">
+
+	<resultMap id="sysUserMap"		type="net.liuzd.mybatis.model.SysUser">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="user_name" jdbcType="VARCHAR"
+			property="userName" />
+		<result column="user_password" jdbcType="VARCHAR"
+			property="userPassword" />
+		<result column="user_email" jdbcType="VARCHAR"
+			property="userEmail" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="user_info" jdbcType="LONGVARCHAR"
+			property="userInfo" />
+		<result column="head_img" jdbcType="LONGVARBINARY"
+			property="headImg" />
+	</resultMap>
+	
+	<!-- 
+		如果是多个参数的话，可以使用column="{id=role_id,name=role_name}"这样.
+		实现延迟加载需要使用association标签的fetchType属性，该属性有lazy和eager两个值，分别代表延迟加载和积极加载
+	-->
+	<resultMap id="userRoleMapSelect" type="net.liuzd.mybatis.model.SysUserExtend" extends="sysUserMap">
+	    <association property="sysRole"
+	    			 fetchType="lazy"
+	                 select="net.liuzd.mybatis.mapper.SysRoleMapper.selectRoleById"
+	                 column="{id=role_id}"/>
+	</resultMap>
+	
+	<select id="selectUserAndRoleByIdSelect" resultMap="userRoleMapSelect">
+	    SELECT  u.id,
+	            u.user_name,
+	            u.user_password,
+	            u.user_email,
+	            u.user_info,
+	            u.head_img,
+	            u.create_time,
+	            ur.role_id
+	    FROM sys_user u
+	    INNER JOIN sys_user_role ur ON u.id = ur.user_id
+	    WHERE u.id = #{id}
+	</select>
+	
+
+</mapper>

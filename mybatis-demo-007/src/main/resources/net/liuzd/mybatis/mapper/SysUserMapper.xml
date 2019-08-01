@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.liuzd.mybatis.mapper.SysUserMapper">
+
+	<resultMap id="BaseResultMap"
+		type="net.liuzd.mybatis.model.SysUser">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="user_name" jdbcType="VARCHAR"
+			property="userName" />
+		<result column="user_password" jdbcType="VARCHAR"
+			property="userPassword" />
+		<result column="user_email" jdbcType="VARCHAR"
+			property="userEmail" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+		<result column="user_info" jdbcType="LONGVARCHAR"
+			property="userInfo" />
+		<result column="head_img" jdbcType="LONGVARBINARY"
+			property="headImg" />
+	</resultMap>
+	
+	<select id="selectByIdOrUserName" resultType="net.liuzd.mybatis.model.SysUser">
+	    SELECT  id,
+	            user_name,
+	            user_password,
+	            user_email,
+	            create_time
+	    FROM sys_user
+	    WHERE 1 = 1
+	    <choose>
+	        <when test="id != null">
+	            AND id = #{id}
+	        </when>
+	        <when test="userName != null and userName != ''">
+	            AND user_name = #{userName}
+	        </when>
+	        <otherwise>
+	            AND 1 = 2
+	        </otherwise>
+	    </choose>
+</select>
+
+<select id="selectByUserWhere" resultType="net.liuzd.mybatis.model.SysUser">
+    SELECT id,
+    user_name,
+    user_password,
+    user_email,
+    create_time
+    FROM sys_user
+    <where>
+        <if test="userName != null and userName != ''">
+            AND user_name LIKE CONCAT('%',#{userName},'%')
+        </if>
+        <if test="userEmail != null and userEmail != ''">
+            AND user_email = #{userEmail}
+        </if>
+    </where>
+</select>
+
+<update id="updateByIdSelectiveSet">
+    UPDATE sys_user
+    <set>
+        <if test="userName != null and userName != ''">
+            user_name = #{userName},
+        </if>
+        <if test="userPassword != null and userPassword != ''">
+            user_password = #{userPassword},
+        </if>
+        <if test="userEmail != null and userEmail != ''">
+            user_email = #{userEmail},
+        </if>
+        <if test="userInfo != null and userInfo != ''">
+            user_info = #{userInfo},
+        </if>
+        <if test="headImg != null">
+            head_img = #{headImg,jdbcType=BLOB},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+        </if>
+        id = #{id},
+    </set>
+    WHERE id = #{id}
+</update>
+
+<select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">   
+	    select id, user_name, user_password, user_email, create_time, user_info, head_img
+	    from sys_user
+	    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+</mapper>
