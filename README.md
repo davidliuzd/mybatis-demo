@@ -1,4 +1,4 @@
-#### 感谢列表如下：
+#### 特别感谢如下：
 
 ##### 1. [刘增辉老师](http://mybatis.tk/) [github](https://github.com/mybatis-book/book)
 
